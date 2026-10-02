@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.leaflet-container {
+  background: #dce7d4;
+  font-family: inherit;
+}
+
+.status-chip {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+}
+
+.gis-shell { @apply bg-slate-100; }
+.gis-workspace { display:grid; grid-template-columns:minmax(0, 72fr) minmax(320px, 28fr); height:calc(100vh - 57px); min-height:680px; }
+.gis-map-stage { @apply relative overflow-hidden bg-slate-200; }
+.gis-topbar { @apply absolute left-4 top-4 z-[500] max-w-[calc(100%-2rem)]; }
+.gis-search { @apply flex h-11 w-[min(470px,calc(100vw-3rem))] items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 shadow-lg; }
+.gis-search span { @apply text-xl text-slate-400; }.gis-search input { @apply min-w-0 flex-1 border-0 bg-transparent text-sm outline-none; }.gis-search button { @apply rounded-md bg-earth-800 px-3 py-1.5 text-sm font-medium text-white; }
+.gis-inline-error { @apply mt-2 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700 shadow; }
+.gis-filter-row { @apply mt-3 flex max-w-[560px] flex-wrap gap-1.5; }.gis-filter-row button { @apply rounded-full border border-white/70 bg-white/95 px-2.5 py-1 text-[11px] font-medium text-slate-600 shadow-sm; }.gis-filter-row button.active { @apply border-earth-800 bg-earth-800 text-white; }
+.gis-map-title { @apply absolute left-4 top-36 z-[400] flex items-center gap-2 rounded-md bg-white/95 px-3 py-2 text-xs shadow; }.gis-map-title>i { @apply h-2 w-2 rounded-full bg-emerald-500; }.gis-map-title strong,.gis-map-title small { @apply block; }.gis-map-title strong { @apply text-slate-800; }.gis-map-title small { @apply mt-0.5 text-[10px] text-slate-500; }
+.gis-legend { @apply absolute bottom-7 left-4 z-[400] grid grid-cols-2 gap-x-3 gap-y-1 rounded-lg bg-white/95 p-3 text-[10px] shadow; }.gis-legend span { @apply flex items-center gap-1.5; }.gis-legend i { @apply h-2.5 w-2.5 rounded-sm; }
+.gis-actions { @apply absolute bottom-7 right-4 z-[400] flex overflow-hidden rounded-lg bg-white shadow; }.gis-actions button { @apply border-r border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 last:border-0; }
+.gis-note { @apply absolute bottom-1 right-3 z-[400] text-[9px] text-slate-600; }
+.gis-drawer { @apply flex min-h-0 flex-col border-l border-slate-200 bg-white; }.gis-drawer-head { @apply border-b border-slate-100 px-5 py-5; }.gis-drawer-head p { @apply text-[10px] font-semibold uppercase tracking-[0.12em] text-earth-700; }.gis-drawer-head h1 { @apply mt-1 text-lg font-semibold text-earth-900; }.gis-drawer-head span { @apply text-xs text-slate-500; }
+.gis-metrics { @apply grid grid-cols-2 gap-2 p-4 pb-2; }.gis-metric { @apply rounded-lg border border-slate-200 bg-slate-50 px-3 py-2; }.gis-metric small,.gis-metric span { @apply block text-[10px] text-slate-500; }.gis-metric small { @apply font-semibold uppercase tracking-wide; }.gis-metric strong { @apply my-0.5 block text-base text-earth-900; }
+.gis-tabs { @apply mx-4 mt-2 grid grid-cols-3 border-b border-slate-200; }.gis-tabs button { @apply border-b-2 border-transparent px-1 py-2.5 text-xs font-medium text-slate-500; }.gis-tabs button.active { @apply border-earth-800 text-earth-800; }.gis-drawer-content { @apply min-h-0 flex-1 overflow-y-auto p-4; }
+.gis-empty { @apply rounded-xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center; }.gis-empty span { @apply text-2xl text-earth-700; }.gis-empty h2 { @apply mt-2 font-semibold text-slate-800; }.gis-empty p { @apply mt-1 text-sm leading-5 text-slate-500; }.gis-panel-state { @apply rounded-lg border bg-slate-50 p-4 text-sm text-slate-500; }.gis-panel-state.error { @apply border-red-200 bg-red-50 text-red-700; }
+.gis-profile header { @apply flex items-start justify-between gap-3 border-b border-slate-100 pb-3; }.gis-profile header p,.gis-profile-section h3,.gis-parcel-list>p,.gis-analytics>p { @apply text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500; }.gis-profile header h2 { @apply mt-1 font-semibold text-earth-900; }.gis-profile-section { @apply py-3 border-b border-slate-100 last:border-0; }.gis-profile-section h3 { @apply mb-2; }.gis-profile-section dl { @apply grid grid-cols-2 gap-x-3 gap-y-2; }.gis-profile-section dt { @apply text-[10px] text-slate-500; }.gis-profile-section dd { @apply mt-0.5 text-xs font-medium text-slate-700 break-words; }.gis-record-grid { @apply grid grid-cols-2 gap-2; }.gis-record-grid>div { @apply rounded-md bg-slate-50 p-2; }.gis-record-grid span { @apply block mb-1 text-[10px] text-slate-500; }
+.gis-parcel-list { @apply mt-4; }.gis-parcel-list>p { @apply mb-2; }.gis-parcel-list button { @apply flex w-full items-center gap-2 border-b border-slate-100 py-2.5 text-left last:border-0; }.gis-parcel-list button>i { @apply h-3 w-3 shrink-0 rounded-sm; }.gis-parcel-list button span { @apply min-w-0 flex-1; }.gis-parcel-list strong,.gis-parcel-list small { @apply block; }.gis-parcel-list strong { @apply text-xs text-slate-700; }.gis-parcel-list small { @apply truncate text-[10px] text-slate-500; }.gis-parcel-list b { @apply text-lg font-normal text-slate-400; }.gis-profile-actions { @apply mt-3 grid grid-cols-2 gap-2; }.gis-profile-actions>* { @apply rounded-lg px-3 py-2 text-center text-sm font-medium; }.gis-profile-actions a { @apply border border-earth-100 text-earth-800; }.gis-profile-actions button { @apply bg-earth-800 text-white; }
+.gis-layer-list>p,.gis-analytics>small { @apply mb-3 block text-xs leading-5 text-slate-500; }.gis-layer-list label,.gis-layer-list button { @apply mb-2 flex w-full items-center justify-between rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700; }.gis-layer-list input { @apply h-4 w-4 accent-earth-800; }.gis-layer-list button.selected { @apply border-earth-700 bg-earth-50 text-earth-900; }.gis-layer-list button span { @apply text-xs text-slate-500; }.gis-analytics>p { @apply mb-2 mt-4 first:mt-0; }.gis-bar { @apply mb-2 flex items-center gap-2 text-xs; }.gis-bar span { @apply w-24 shrink-0 text-slate-600; }.gis-bar>i { @apply h-2 flex-1 overflow-hidden rounded-full bg-slate-100; }.gis-bar>i>b { @apply block h-full rounded-full bg-earth-700; }.gis-bar strong { @apply w-4 text-right text-slate-600; }
+@media (max-width: 1023px) { .gis-workspace { grid-template-columns:1fr; height:auto; min-height:0; }.gis-map-stage { height:70vh; min-height:560px; }.gis-drawer { min-height:620px; border-left:0; border-top:1px solid rgb(226 232 240); } }
+@media (max-width: 640px) { .gis-map-stage { height:620px; }.gis-topbar { left:10px; top:10px; }.gis-search { width:calc(100vw - 20px); }.gis-filter-row { max-height:64px; overflow:auto; flex-wrap:nowrap; padding-bottom:2px; }.gis-map-title { top:132px; left:10px; }.gis-legend { left:10px; bottom:30px; grid-template-columns:1fr; }.gis-actions { right:10px; bottom:30px; }.gis-note { display:none; } }

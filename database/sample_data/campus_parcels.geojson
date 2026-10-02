@@ -1,0 +1,1122 @@
+{
+  "type": "FeatureCollection",
+  "name": "bhustack_demo_campus",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000001",
+        "survey_number": "200/1",
+        "parcel_number": "P-001",
+        "name": "Academic Block A",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58005333,
+              12.990048
+            ],
+            [
+              77.58128,
+              12.990048
+            ],
+            [
+              77.58128,
+              12.991152
+            ],
+            [
+              77.58005333,
+              12.991152
+            ],
+            [
+              77.58005333,
+              12.990048
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000002",
+        "survey_number": "200/2",
+        "parcel_number": "P-002",
+        "name": "Academic Block B",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58138667,
+              12.990048
+            ],
+            [
+              77.58261333,
+              12.990048
+            ],
+            [
+              77.58261333,
+              12.991152
+            ],
+            [
+              77.58138667,
+              12.991152
+            ],
+            [
+              77.58138667,
+              12.990048
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000003",
+        "survey_number": "200/3",
+        "parcel_number": "P-003",
+        "name": "Academic Block C",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58272,
+              12.990048
+            ],
+            [
+              77.58394667,
+              12.990048
+            ],
+            [
+              77.58394667,
+              12.991152
+            ],
+            [
+              77.58272,
+              12.991152
+            ],
+            [
+              77.58272,
+              12.990048
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000004",
+        "survey_number": "201/1",
+        "parcel_number": "P-004",
+        "name": "Lecture Hall Complex",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58405333,
+              12.990048
+            ],
+            [
+              77.58528,
+              12.990048
+            ],
+            [
+              77.58528,
+              12.991152
+            ],
+            [
+              77.58405333,
+              12.991152
+            ],
+            [
+              77.58405333,
+              12.990048
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000005",
+        "survey_number": "201/2",
+        "parcel_number": "P-005",
+        "name": "Central Library",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58538667,
+              12.990048
+            ],
+            [
+              77.58661333,
+              12.990048
+            ],
+            [
+              77.58661333,
+              12.991152
+            ],
+            [
+              77.58538667,
+              12.991152
+            ],
+            [
+              77.58538667,
+              12.990048
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000006",
+        "survey_number": "201/3",
+        "parcel_number": "P-006",
+        "name": "Computer Science Lab",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58672,
+              12.990048
+            ],
+            [
+              77.58794667,
+              12.990048
+            ],
+            [
+              77.58794667,
+              12.991152
+            ],
+            [
+              77.58672,
+              12.991152
+            ],
+            [
+              77.58672,
+              12.990048
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000007",
+        "survey_number": "202/1",
+        "parcel_number": "P-007",
+        "name": "Electronics Lab",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58005333,
+              12.991248
+            ],
+            [
+              77.58128,
+              12.991248
+            ],
+            [
+              77.58128,
+              12.992352
+            ],
+            [
+              77.58005333,
+              12.992352
+            ],
+            [
+              77.58005333,
+              12.991248
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000008",
+        "survey_number": "202/2",
+        "parcel_number": "P-008",
+        "name": "Workshop Shed",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58138667,
+              12.991248
+            ],
+            [
+              77.58261333,
+              12.991248
+            ],
+            [
+              77.58261333,
+              12.992352
+            ],
+            [
+              77.58138667,
+              12.992352
+            ],
+            [
+              77.58138667,
+              12.991248
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000009",
+        "survey_number": "202/3",
+        "parcel_number": "P-009",
+        "name": "Hostel A",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58272,
+              12.991248
+            ],
+            [
+              77.58394667,
+              12.991248
+            ],
+            [
+              77.58394667,
+              12.992352
+            ],
+            [
+              77.58272,
+              12.992352
+            ],
+            [
+              77.58272,
+              12.991248
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000010",
+        "survey_number": "203/1",
+        "parcel_number": "P-010",
+        "name": "Hostel B",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58405333,
+              12.991248
+            ],
+            [
+              77.58528,
+              12.991248
+            ],
+            [
+              77.58528,
+              12.992352
+            ],
+            [
+              77.58405333,
+              12.992352
+            ],
+            [
+              77.58405333,
+              12.991248
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000011",
+        "survey_number": "203/2",
+        "parcel_number": "P-011",
+        "name": "Hostel C",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58538667,
+              12.991248
+            ],
+            [
+              77.58661333,
+              12.991248
+            ],
+            [
+              77.58661333,
+              12.992352
+            ],
+            [
+              77.58538667,
+              12.992352
+            ],
+            [
+              77.58538667,
+              12.991248
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000012",
+        "survey_number": "203/3",
+        "parcel_number": "P-012",
+        "name": "Dining Hall",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58672,
+              12.991248
+            ],
+            [
+              77.58794667,
+              12.991248
+            ],
+            [
+              77.58794667,
+              12.992352
+            ],
+            [
+              77.58672,
+              12.992352
+            ],
+            [
+              77.58672,
+              12.991248
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000013",
+        "survey_number": "204/1",
+        "parcel_number": "P-013",
+        "name": "Sports Complex",
+        "land_use": "Recreational"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58005333,
+              12.992448
+            ],
+            [
+              77.58128,
+              12.992448
+            ],
+            [
+              77.58128,
+              12.993552
+            ],
+            [
+              77.58005333,
+              12.993552
+            ],
+            [
+              77.58005333,
+              12.992448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000014",
+        "survey_number": "204/2",
+        "parcel_number": "P-014",
+        "name": "Playground",
+        "land_use": "Recreational"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58138667,
+              12.992448
+            ],
+            [
+              77.58261333,
+              12.992448
+            ],
+            [
+              77.58261333,
+              12.993552
+            ],
+            [
+              77.58138667,
+              12.993552
+            ],
+            [
+              77.58138667,
+              12.992448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000015",
+        "survey_number": "204/3",
+        "parcel_number": "P-015",
+        "name": "Admin Block",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58272,
+              12.992448
+            ],
+            [
+              77.58394667,
+              12.992448
+            ],
+            [
+              77.58394667,
+              12.993552
+            ],
+            [
+              77.58272,
+              12.993552
+            ],
+            [
+              77.58272,
+              12.992448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000016",
+        "survey_number": "205/1",
+        "parcel_number": "P-016",
+        "name": "Staff Quarters 1",
+        "land_use": "Residential"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58405333,
+              12.992448
+            ],
+            [
+              77.58528,
+              12.992448
+            ],
+            [
+              77.58528,
+              12.993552
+            ],
+            [
+              77.58405333,
+              12.993552
+            ],
+            [
+              77.58405333,
+              12.992448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000017",
+        "survey_number": "205/2",
+        "parcel_number": "P-017",
+        "name": "Staff Quarters 2",
+        "land_use": "Residential"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58538667,
+              12.992448
+            ],
+            [
+              77.58661333,
+              12.992448
+            ],
+            [
+              77.58661333,
+              12.993552
+            ],
+            [
+              77.58538667,
+              12.993552
+            ],
+            [
+              77.58538667,
+              12.992448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000018",
+        "survey_number": "205/3",
+        "parcel_number": "P-018",
+        "name": "Guest House",
+        "land_use": "Residential"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58672,
+              12.992448
+            ],
+            [
+              77.58794667,
+              12.992448
+            ],
+            [
+              77.58794667,
+              12.993552
+            ],
+            [
+              77.58672,
+              12.993552
+            ],
+            [
+              77.58672,
+              12.992448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000019",
+        "survey_number": "206/1",
+        "parcel_number": "P-019",
+        "name": "Auditorium",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58005333,
+              12.993648
+            ],
+            [
+              77.58128,
+              12.993648
+            ],
+            [
+              77.58128,
+              12.994752
+            ],
+            [
+              77.58005333,
+              12.994752
+            ],
+            [
+              77.58005333,
+              12.993648
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000020",
+        "survey_number": "206/2",
+        "parcel_number": "P-020",
+        "name": "Innovation Centre",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58138667,
+              12.993648
+            ],
+            [
+              77.58261333,
+              12.993648
+            ],
+            [
+              77.58261333,
+              12.994752
+            ],
+            [
+              77.58138667,
+              12.994752
+            ],
+            [
+              77.58138667,
+              12.993648
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000021",
+        "survey_number": "206/3",
+        "parcel_number": "P-021",
+        "name": "Utility Substation",
+        "land_use": "Utility"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58272,
+              12.993648
+            ],
+            [
+              77.58394667,
+              12.993648
+            ],
+            [
+              77.58394667,
+              12.994752
+            ],
+            [
+              77.58272,
+              12.994752
+            ],
+            [
+              77.58272,
+              12.993648
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000022",
+        "survey_number": "207/1",
+        "parcel_number": "P-022",
+        "name": "Green Belt East",
+        "land_use": "Environmental"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58405333,
+              12.993648
+            ],
+            [
+              77.58528,
+              12.993648
+            ],
+            [
+              77.58528,
+              12.994752
+            ],
+            [
+              77.58405333,
+              12.994752
+            ],
+            [
+              77.58405333,
+              12.993648
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000023",
+        "survey_number": "207/2",
+        "parcel_number": "P-023",
+        "name": "Parking Lot North",
+        "land_use": "Utility"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58538667,
+              12.993648
+            ],
+            [
+              77.58661333,
+              12.993648
+            ],
+            [
+              77.58661333,
+              12.994752
+            ],
+            [
+              77.58538667,
+              12.994752
+            ],
+            [
+              77.58538667,
+              12.993648
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000024",
+        "survey_number": "207/3",
+        "parcel_number": "P-024",
+        "name": "Open Amphitheatre",
+        "land_use": "Recreational"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58672,
+              12.993648
+            ],
+            [
+              77.58794667,
+              12.993648
+            ],
+            [
+              77.58794667,
+              12.994752
+            ],
+            [
+              77.58672,
+              12.994752
+            ],
+            [
+              77.58672,
+              12.993648
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000025",
+        "survey_number": "208/1",
+        "parcel_number": "P-025",
+        "name": "Health Centre",
+        "land_use": "Institutional"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58005333,
+              12.994848
+            ],
+            [
+              77.58128,
+              12.994848
+            ],
+            [
+              77.58128,
+              12.995952
+            ],
+            [
+              77.58005333,
+              12.995952
+            ],
+            [
+              77.58005333,
+              12.994848
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000026",
+        "survey_number": "208/2",
+        "parcel_number": "P-026",
+        "name": "Campus Canteen",
+        "land_use": "Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58138667,
+              12.994848
+            ],
+            [
+              77.58261333,
+              12.994848
+            ],
+            [
+              77.58261333,
+              12.995952
+            ],
+            [
+              77.58138667,
+              12.995952
+            ],
+            [
+              77.58138667,
+              12.994848
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000027",
+        "survey_number": "208/3",
+        "parcel_number": "P-027",
+        "name": "Book Store",
+        "land_use": "Commercial"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58272,
+              12.994848
+            ],
+            [
+              77.58394667,
+              12.994848
+            ],
+            [
+              77.58394667,
+              12.995952
+            ],
+            [
+              77.58272,
+              12.995952
+            ],
+            [
+              77.58272,
+              12.994848
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000028",
+        "survey_number": "209/1",
+        "parcel_number": "P-028",
+        "name": "Maintenance Yard",
+        "land_use": "Utility"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58405333,
+              12.994848
+            ],
+            [
+              77.58528,
+              12.994848
+            ],
+            [
+              77.58528,
+              12.995952
+            ],
+            [
+              77.58405333,
+              12.995952
+            ],
+            [
+              77.58405333,
+              12.994848
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000029",
+        "survey_number": "209/2",
+        "parcel_number": "P-029",
+        "name": "Water Tank Parcel",
+        "land_use": "Utility"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58538667,
+              12.994848
+            ],
+            [
+              77.58661333,
+              12.994848
+            ],
+            [
+              77.58661333,
+              12.995952
+            ],
+            [
+              77.58538667,
+              12.995952
+            ],
+            [
+              77.58538667,
+              12.994848
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ulpin": "IND-DEMO-000030",
+        "survey_number": "209/3",
+        "parcel_number": "P-030",
+        "name": "Vacant Plot West",
+        "land_use": "Vacant"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.58672,
+              12.994848
+            ],
+            [
+              77.58794667,
+              12.994848
+            ],
+            [
+              77.58794667,
+              12.995952
+            ],
+            [
+              77.58672,
+              12.995952
+            ],
+            [
+              77.58672,
+              12.994848
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "info": {
+    "name": "BhuStack",
+    "description": "Synthetic land governance API. Not live government records.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000/api/v1" },
+    { "key": "ulpin", "value": "IND-DEMO-000001" },
+    { "key": "requestId", "value": "REQ-000001" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": { "method": "GET", "url": "{{baseUrl}}/health" }
+    },
+    {
+      "name": "Get All Parcels",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels" }
+    },
+    {
+      "name": "Get Parcel by ULPIN",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}" }
+    },
+    {
+      "name": "Search by ULPIN",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/parcels/search?ulpin=IND-DEMO-000001"
+      }
+    },
+    {
+      "name": "Search by Survey Number",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/parcels/search?survey_number=200/1"
+      }
+    },
+    {
+      "name": "Search by Parcel Number",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/parcels/search?parcel_number=P-001"
+      }
+    },
+    {
+      "name": "Get Ownership",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}/ownership" }
+    },
+    {
+      "name": "Get RoR",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}/ror" }
+    },
+    {
+      "name": "Get Registration",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}/registration" }
+    },
+    {
+      "name": "Get Land Use",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}/land-use" }
+    },
+    {
+      "name": "Get Tax",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}/tax" }
+    },
+    {
+      "name": "Get Restrictions",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}/restrictions" }
+    },
+    {
+      "name": "Get Disputes",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}/disputes" }
+    },
+    {
+      "name": "Get Building Permission",
+      "request": { "method": "GET", "url": "{{baseUrl}}/parcels/{{ulpin}}/building-permission" }
+    },
+    {
+      "name": "Get GeoJSON",
+      "request": { "method": "GET", "url": "{{baseUrl}}/geojson" }
+    },
+    {
+      "name": "Create Service Request",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ulpin\": \"IND-DEMO-000001\",\n  \"service_type\": \"LAND_RECORD_VERIFICATION\",\n  \"remarks\": \"Citizen requested RoR verification\"\n}"
+        },
+        "url": "{{baseUrl}}/service-requests"
+      }
+    },
+    {
+      "name": "Get Application",
+      "request": { "method": "GET", "url": "{{baseUrl}}/service-requests/{{requestId}}" }
+    },
+    {
+      "name": "Synthetic Government API",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/synthetic-government/parcels/{{ulpin}}"
+      }
+    },
+    {
+      "name": "DemoStateAdapter",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/adapters/demo-state/parcels/{{ulpin}}"
+      }
+    },
+    {
+      "name": "Admin Dashboard",
+      "request": { "method": "GET", "url": "{{baseUrl}}/dashboard" }
+    }
+  ]
+}

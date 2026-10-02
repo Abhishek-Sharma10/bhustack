@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BhuStack - Dynamic Satellite Parcel View</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #0f172a;
+            --accent: #f59e0b;
+            --accent-glow: rgba(245, 158, 11, 0.4);
+            --bg-glass: rgba(15, 23, 42, 0.88);
+            --border-glass: rgba(255, 255, 255, 0.15);
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #38bdf8;
+            --card-bg: rgba(30, 41, 59, 0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-primary);
+            background: #000;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+            z-index: 1;
+            background: #0b1120;
+        }
+
+        /* Top GIS Search Header */
+        .gis-header-panel {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            right: 430px;
+            z-index: 1000;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 14px 18px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 1080px) {
+            .gis-header-panel {
+                right: 14px;
+                top: 12px;
+            }
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .brand-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo-badge {
+            background: linear-gradient(135deg, #2563eb, #d97706);
+            color: white;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            padding: 4px 9px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+        }
+
+        .brand-title {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            color: #fff;
+        }
+
+        .satellite-live-tag {
+            font-size: 11px;
+            background: rgba(16, 185, 129, 0.18);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 2px 8px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        /* Search Form */
+        .search-form-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .input-group {
+            position: relative;
+            flex: 1;
+            min-width: 240px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.09);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+        }
+
+        /* Quick Sample Chips */
+        .sample-chips-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chip-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-right: 2px;
+        }
+
+        .sample-chip {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #cbd5e1;
+            padding: 3px 9px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: monospace;
+        }
+
+        .sample-chip:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* Status & Feedback Banner inside Search */
+        .search-feedback {
+            margin-top: 8px;
+            font-size: 12.5px;
+            font-weight: 500;
+            display: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .search-feedback.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.18);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .search-feedback.loading {
+            display: block;
+            background: rgba(56, 189, 248, 0.18);
+            color: #7dd3fc;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        /* Right Floating Info & Department Dossier */
+        .gis-sidebar {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            bottom: 34px;
+            width: 395px;
+            z-index: 1000;
+            background: var(--bg-glass);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-width: 1080px) {
+            .gis-sidebar {
+                top: auto;
+                bottom: 34px;
+                left: 14px;
+                right: 14px;
+                width: auto;
+                max-height: 48vh;
+            }
+        }
+
+        .sidebar-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-badge {
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            font-weight: 600;
+        }
+
+        .sidebar-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px 16px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+
+        .sidebar-scrollable::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar-scrollable::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        /* Empty / Initial State Card */
+        .empty-state-card {
+            text-align: center;
+            padding: 36px 16px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+
+        .empty-title {
+            color: #e2e8f0;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .empty-desc {
+            font-size: 12.5px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .instructions-list {
+            text-align: left;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .instructions-list li {
+            margin-left: 18px;
+            margin-bottom: 4px;
+            color: #cbd5e1;
+        }
+
+        /* Central Visual Requirement: Covered Area Banner */
+        .ulpin-covered-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.35));
+            border: 1.5px solid var(--accent);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+        }
+
+        .banner-highlight-text {
+            font-size: 11px;
+            font-weight: 800;
+            color: #fef3c7;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .banner-ulpin-id {
+            font-size: 17px;
+            font-weight: 800;
+            color: #ffffff;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .banner-owner {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #fde68a;
+            margin-top: 2px;
+        }
+
+        /* Essential Parcel Metrics Table */
+        .parcel-metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .metric-cell {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 8px;
+            padding: 9px 11px;
+        }
+
+        .metric-cell.full-width {
+            grid-column: span 2;
+        }
+
+        .metric-label {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+        }
+
+        .metric-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-top: 2px;
+        }
+
+        /* 8 Core BhuStack Departments Accordion / Stack */
+        .section-heading {
+            font-size: 12px;
+            font-weight: 700;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin: 14px 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dept-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .dept-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .dept-header {
+            padding: 9px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(15, 23, 42, 0.35);
+        }
+
+        .dept-title-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dept-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.12);
+            font-size: 10px;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .dept-badge {
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 1px 7px;
+            border-radius: 4px;
+        }
+
+        .badge-success { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-warning { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-danger { background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-info { background: rgba(56, 189, 248, 0.18); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3); }
+
+        .dept-body {
+            padding: 10px 12px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #cbd5e1;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dept-item-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .dept-item-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .dept-prop-name {
+            color: var(--text-muted);
+        }
+
+        .dept-prop-val {
+            font-weight: 600;
+            color: #f1f5f9;
+            text-align: right;
+        }
+
+        /* Disclaimer Footer */
+        .prototype-disclaimer {
+            position: absolute;
+            bottom: 6px;
+            left: 14px;
+            right: 430px;
+            z-index: 999;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 11px;
+            color: #94a3b8;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 1080px) {
+            .prototype-disclaimer {
+                display: none;
+            }
+        }
+
+        /* Permanent Map Label for the active Parcel */
+        .parcel-permanent-label {
+            background: rgba(15, 23, 42, 0.94) !important;
+            border: 2px solid #f59e0b !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 14px rgba(245, 158, 11, 0.5) !important;
+            color: #ffffff !important;
+            padding: 8px 12px !important;
+            text-align: center !important;
+            white-space: nowrap !important;
+        }
+
+        .parcel-permanent-label::before {
+            display: none !important;
+        }
+
+        .label-badge-title {
+            font-size: 10px;
+            font-weight: 800;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 2px;
+        }
+
+        .label-badge-ulpin {
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffffff;
+            font-family: monospace;
+        }
+
+        .label-badge-owner {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-top: 1px;
+        }
+
+        /* Map Controls Toolbar (Zoom, Fit, Basemap) */
+        .gis-map-tools {
+            position: absolute;
+            bottom: 40px;
+            left: 14px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .map-tool-btn {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s;
+        }
+
+        .map-tool-btn:hover {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: #38bdf8;
+        }
+
+        /* Department Marker Popups Customization */
+        .leaflet-popup-content-wrapper {
+            background: rgba(15, 23, 42, 0.95) !important;
+            color: #f8fafc !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 8px !important;
+            backdrop-filter: blur(8px) !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        .leaflet-popup-tip {
+            background: rgba(15, 23, 42, 0.95) !important;
+        }
+
+        .popup-header {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #38bdf8;
+        }
+
+        .popup-body {
+            font-size: 12px;
+            line-height: 1.4;
+            color: #cbd5e1;
+        }
+
+        .popup-divider {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top GIS Search & Control Panel -->
+    <header class="gis-header-panel">
+        <div class="header-brand">
+            <div class="brand-title-wrap">
+                <span class="brand-logo-badge">BHUSTACK GIS</span>
+                <h1 class="brand-title">Satellite Parcel Intelligence Viewer</h1>
+            </div>
+            <div class="satellite-live-tag">
+                <span class="pulse-dot"></span>
+                Esri World Imagery (Live)
+            </div>
+        </div>
+
+        <form id="ulpinSearchForm" class="search-form-row" onsubmit="handleSearch(event)">
+            <div class="input-group">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    id="ulpinInput" 
+                    class="search-input" 
+                    placeholder="Enter ULPIN (e.g. 1234-5678-9012)" 
+                    autocomplete="off"
+                    aria-label="Enter ULPIN"
+                />
+            </div>
+            <button type="submit" id="viewParcelBtn" class="btn btn-primary">
+                <span>View Parcel</span>
+            </button>
+            <button type="button" id="clearBtn" class="btn btn-secondary" onclick="clearSelectedParcel()">
+                <span>Clear</span>
+            </button>
+        </form>
+
+        <div class="sample-chips-row">
+            <span class="chip-label">Try Prototype ULPINs:</span>
+            <button type="button" class="sample-chip" onclick="quickSelectULPIN('1234-5678-9012')">1234-5678-9012 (Delhi)</button>
+            <button type="button" class="sample-chip" onclick="quickSelectULPIN('9876-5432-1098')">9876-5432-1098 (Varanasi)</button>
+            <button type="button" class="sample-chip" onclick="quickSelectULPIN('5566-7788-9900')">5566-7788-9900 (Noida)</button>
+            <button type="button" class="sample-chip" onclick="quickSelectULPIN('4321-8765-2109')">4321-8765-2109 (Peri-Urban)</button>
+        </div>
+
+        <div id="searchFeedback" class="search-feedback"></div>
+    </header>
+
+    <!-- Map Tools Toolbar -->
+    <div class="gis-map-tools">
+        <button class="map-tool-btn" onclick="fitCurrentParcel()" id="fitParcelBtn" style="display: none;" title="Fit parcel bounds">
+            ⛶ Fit Parcel Bounds
+        </button>
+        <button class="map-tool-btn" onclick="resetDefaultView()" title="Reset default map view">
+            ⌖ Default Overview
+        </button>
+        <button class="map-tool-btn" onclick="toggleLabelsLayer()" id="labelsToggleBtn" title="Toggle road & place labels">
+            🏷️ Toggle Map Labels
+        </button>
+    </div>
+
+    <!-- Leaflet Satellite Map -->
+    <div id="map"></div>
+
+    <!-- Right Floating Parcel & 8-Department Dossier -->
+    <aside class="gis-sidebar" id="gisSidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">
+                <span>Unified Parcel Dossier</span>
+            </div>
+            <span class="sidebar-badge" id="dossierStatusBadge">No Parcel Selected</span>
+        </div>
+
+        <div class="sidebar-scrollable" id="sidebarContent">
+            <!-- Initial Empty State -->
+            <div class="empty-state-card" id="emptyStateView">
+                <div class="empty-icon">🛰️</div>
+                <h3 class="empty-title">No Parcel Loaded</h3>
+                <p class="empty-desc">Enter an authoritative Unique Land Parcel Identification Number (ULPIN) to inspect boundary polygons and multi-department governance data.</p>
+                <div class="instructions-list">
+                    <strong>Workflow:</strong>
+                    <ol>
+                        <li>Enter ULPIN or click a prototype chip.</li>
+                        <li>Dynamic parcel boundary geometry is fetched.</li>
+                        <li>Map zooms to high-resolution satellite view.</li>
+                        <li>Permanent identifier label binds to the covered area.</li>
+                        <li>All 8 state land governance departments unlock.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Dynamic Loaded Parcel Content (hidden by default) -->
+            <div id="parcelLoadedView" style="display: none;">
+                <!-- Central Visual Requirement Banner -->
+                <div class="ulpin-covered-banner" id="ulpinCoveredBanner">
+                    <span class="banner-highlight-text">★ THIS COVERED AREA BELONGS TO THIS ULPIN ★</span>
+                    <div class="banner-ulpin-id" id="bannerUlpin"></div>
+                    <div class="banner-owner" id="bannerOwner"></div>
+                </div>
+
+                <!-- Core Parcel Attributes -->
+                <div class="parcel-metrics-grid">
+                    <div class="metric-cell">
+                        <div class="metric-label">Parcel Area</div>
+                        <div class="metric-value" id="metricArea">—</div>
+                    </div>
+                    <div class="metric-cell">
+                        <div class="metric-label">Zoning Code</div>
+                        <div class="metric-value" id="metricZone">—</div>
+                    </div>
+                    <div class="metric-cell">
+                        <div class="metric-label">Registration</div>
+                        <div class="metric-value" id="metricRegistration">—</div>
+                    </div>
+                    <div class="metric-cell">
+                        <div class="metric-label">Cadastral Sheet</div>
+                        <div class="metric-value" id="metricCadastral">—</div>
+                    </div>
+                    <div class="metric-cell full-width">
+                        <div class="metric-label">Geodetic Center</div>
+                        <div class="metric-value" id="metricCoordinates">—</div>
+                    </div>
+                </div>
+
+                <!-- 8 Departments Accordion List -->
+                <div class="section-heading">
+                    <span>8 Integrated Departments</span>
+                    <span style="font-size: 10px; color: var(--accent);">Synchronized</span>
+                </div>
+
+                <div id="departmentsContainer"></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Prototype Disclaimer Footer -->
+    <footer class="prototype-disclaimer">
+        <span>⚖️</span>
+        <span><strong>Disclaimer:</strong> Prototype GIS visualization. Parcel boundaries shown for demonstration and must be verified against authoritative cadastral records.</span>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        /**
+         * BhuStack GIS - Satellite Parcel View
+         * Architecture:
+         *   UI -> ULPIN Search -> validateULPIN() -> getParcelByULPIN() -> displayParcel()
+         */
+
+        // ==========================================
+        // 1. MOCK DATASET
+        // Real-world GIS preparation: structured separately from UI
+        // ==========================================
+        const parcels = {
+            "1234-5678-9012": {
+                ulpin: "1234-5678-9012",
+                owner: "Ramesh Kumar",
+                locationName: "Barakhamba / Central Delhi",
+                area: "1,250 sq ft (116.1 sq m)",
+                zone: "Residential (R-2 Medium Density)",
+                registrationStatus: "Registered",
+                cadastralSheet: "CS-DEL-2021-09",
+                center: [28.61392, 77.20907],
+                boundary: [
+                    [28.61405, 77.20890],
+                    [28.61405, 77.20925],
+                    [28.61380, 77.20925],
+                    [28.61380, 77.20890]
+                ],
+                // 8 Integrated Core State Departments
+                departments: {
+                    landRecords: {
+                        name: "1. Land Records / Revenue",
+                        status: "Certified",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Owner of Record": "Ramesh Kumar",
+                            "ULPIN": "1234-5678-9012",
+                            "Khasra / Survey No": "412/18",
+                            "Khata Number": "89",
+                            "Mutation Status": "Certified by Tehsildar"
+                        },
+                        marker: {
+                            latlng: [28.61392, 77.20907],
+                            popup: "<b>1. Land Records</b><br>Owner: Ramesh Kumar<br>ULPIN: 1234-5678-9012<br>Khata: 89 | Khasra: 412/18"
+                        }
+                    },
+                    registration: {
+                        name: "2. Registration & Deeds",
+                        status: "Registered",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Last Sale Deed": "12-Aug-2023",
+                            "Sub-Registrar Office": "SRO-IV New Delhi",
+                            "Stamp Duty": "Fully Paid (₹1,84,000)",
+                            "Book / Volume": "Book 1, Vol 4592, pp 112"
+                        }
+                    },
+                    surveyCadastral: {
+                        name: "3. Survey & Cadastral",
+                        status: "Boundary Verified",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Cadastral Map Sheet": "CS-DEL-2021-09",
+                            "Survey Accuracy": "DGPS Geodetic (±0.05m)",
+                            "Boundary Pillars": "4 Geotagged Pillars Active",
+                            "Last Resurvey Date": "18-Jan-2024"
+                        },
+                        popup: "<b>3. Survey & Cadastral</b>: Boundary Lat/Long verified via DGPS"
+                    },
+                    townPlanning: {
+                        name: "4. Town Planning",
+                        status: "Residential Zone",
+                        badgeClass: "badge-info",
+                        details: {
+                            "Master Plan": "Delhi Master Plan 2041",
+                            "Zoning Classification": "Plotted Residential",
+                            "Permissible FAR": "2.0 (Max Height 15m)",
+                            "Front Setback Req": "3.0 meters"
+                        }
+                    },
+                    buildingPermission: {
+                        name: "5. Building Permission",
+                        status: "G+2 Approved",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Sanction Number": "BP/2024/0981",
+                            "Approved Blueprint": "Ground + 2 Floors (G+2)",
+                            "Fire Safety NOC": "Approved / Cleared",
+                            "Completion Certificate": "Issued (05-May-2024)"
+                        },
+                        marker: {
+                            latlng: [28.61398, 77.20915],
+                            color: "#3b82f6",
+                            popup: "<b>5. Building Permission</b>: G+2 Approved Blueprint<br>Sanction BP/2024/0981"
+                        }
+                    },
+                    propertyTax: {
+                        name: "6. Property Tax",
+                        status: "Paid for 2026",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Assessment PIN": "NDMC-PT-2021-8874",
+                            "Current Status": "Paid for FY 2025-26",
+                            "Annual Tax Paid": "₹14,200",
+                            "Outstanding Arrears": "₹0.00"
+                        }
+                    },
+                    environment: {
+                        name: "7. Environment Restrictions",
+                        status: "Active 5m Road Setback",
+                        badgeClass: "badge-warning",
+                        details: {
+                            "Restriction Type": "Road Setback Buffer",
+                            "Condition": "No permanent construction within 5m of main road",
+                            "Tree Preservation": "2 Heritage trees mapped",
+                            "Eco-Sensitive Zone": "Outside Eco-Buffer"
+                        },
+                        polyline: {
+                            coords: [
+                                [28.61410, 77.20880],
+                                [28.61410, 77.20935]
+                            ],
+                            color: "#10b981",
+                            popup: "<b>7. Environment Restrictions</b><br>No construction within 5 meters of main road."
+                        }
+                    },
+                    dispute: {
+                        name: "8. Dispute / Encumbrance",
+                        status: "Active Bank Mortgage",
+                        badgeClass: "badge-danger",
+                        details: {
+                            "Encumbrance Status": "Bank Mortgage Active (SBI Bank)",
+                            "Lien Holder": "State Bank of India (SME Branch)",
+                            "Mortgage Amount": "₹45,00,000",
+                            "Litigation Status": "Zero Court Injunctions"
+                        },
+                        marker: {
+                            latlng: [28.61385, 77.20895],
+                            color: "#ef4444",
+                            popup: "<b>8. Dispute / Encumbrance</b><br>Bank Mortgage Active (SBI Bank)"
+                        }
+                    }
+                }
+            },
+
+            "9876-5432-1098": {
+                ulpin: "9876-5432-1098",
+                owner: "Sunita Devi & Anil Sharma",
+                locationName: "Assi Ghat / Varanasi City",
+                area: "3,480 sq ft (323.3 sq m)",
+                zone: "Mixed Commercial / Heritage Residential",
+                registrationStatus: "Registered",
+                cadastralSheet: "VNS-URB-2022-44",
+                center: [25.28180, 82.99950],
+                boundary: [
+                    [25.28220, 82.99910],
+                    [25.28220, 82.99980],
+                    [25.28140, 82.99990],
+                    [25.28140, 82.99920]
+                ],
+                departments: {
+                    landRecords: {
+                        name: "1. Land Records / Revenue",
+                        status: "Certified",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Owner of Record": "Sunita Devi & Anil Sharma (Joint Title)",
+                            "ULPIN": "9876-5432-1098",
+                            "Khasra No": "182/4",
+                            "Khata Number": "34",
+                            "Classification": "Abadi Deh (Urban Inhabited Area)"
+                        },
+                        marker: {
+                            latlng: [25.28180, 82.99950],
+                            popup: "<b>1. Land Records</b><br>Owners: Sunita Devi & Anil Sharma<br>ULPIN: 9876-5432-1098"
+                        }
+                    },
+                    registration: {
+                        name: "2. Registration & Deeds",
+                        status: "Registered",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Last Sale Deed": "04-Feb-2021",
+                            "Sub-Registrar Office": "SRO Varanasi Sadar",
+                            "Deed Identification": "Book 1, Vol 1088, pp 45-56",
+                            "Stamp Duty": "Cleared & Verified"
+                        }
+                    },
+                    surveyCadastral: {
+                        name: "3. Survey & Cadastral",
+                        status: "Cadastral Matched",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Cadastral Sheet": "VNS-URB-2022-44",
+                            "Survey Method": "ETS Ground Electronic Survey",
+                            "Datum": "Survey of India Geodetic Datum",
+                            "Pillars": "Georeferenced"
+                        },
+                        popup: "<b>3. Survey & Cadastral</b>: Heritage Corridor Cadastral Sheet VNS-URB-2022-44"
+                    },
+                    townPlanning: {
+                        name: "4. Town Planning",
+                        status: "Mixed Heritage Zone",
+                        badgeClass: "badge-info",
+                        details: {
+                            "Master Plan": "Varanasi Development Authority (VDA) 2031",
+                            "Zoning": "Mixed Heritage & Retail Corridor",
+                            "Permissible FAR": "1.5",
+                            "Heritage Restrictions": "NMA Regulations Apply"
+                        }
+                    },
+                    buildingPermission: {
+                        name: "5. Building Permission",
+                        status: "Conditional Approval",
+                        badgeClass: "badge-warning",
+                        details: {
+                            "Sanction Number": "VDA/BP/2022/411",
+                            "Approved Floors": "Ground + 1 Floor (G+1)",
+                            "Archaeological Clearance": "NMA Regulated Clearance Issued",
+                            "Commercial Use": "Permitted on Ground Floor Only"
+                        },
+                        marker: {
+                            latlng: [25.28195, 82.99965],
+                            color: "#f59e0b",
+                            popup: "<b>5. Building Permission</b>: G+1 Conditional (VDA Heritage Zone)"
+                        }
+                    },
+                    propertyTax: {
+                        name: "6. Property Tax",
+                        status: "Paid for 2026",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Assessment ID": "VMC-COMM-2023-410",
+                            "Payment Status": "Paid for FY 2025-26",
+                            "Receipt Number": "VMC-REC-99201",
+                            "Annual Tax": "₹28,600"
+                        }
+                    },
+                    environment: {
+                        name: "7. Environment Restrictions",
+                        status: "Ganga 200m Eco-Buffer",
+                        badgeClass: "badge-warning",
+                        details: {
+                            "Regulated Zone": "River Ganga 200m Eco-Buffer",
+                            "NGT Guidelines": "Zero industrial effluent discharge",
+                            "Excavation Limit": "No basement excavation allowed",
+                            "Compliance": "Site Inspected & Verified"
+                        },
+                        polyline: {
+                            coords: [
+                                [25.28225, 82.99900],
+                                [25.28225, 83.00000]
+                            ],
+                            color: "#10b981",
+                            popup: "<b>7. Environment Restrictions</b><br>Ganga River 200m Eco-Sensitive Regulated Zone."
+                        }
+                    },
+                    dispute: {
+                        name: "8. Dispute / Encumbrance",
+                        status: "No Active Encumbrance",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Title Status": "Clear Freehold Title",
+                            "Mortgages / Liens": "Nil (CERSAI Certificate Clean)",
+                            "Court Disputes": "No pending suits in revenue or civil courts",
+                            "Last Search Report": "Conducted 10-Jan-2025"
+                        },
+                        marker: {
+                            latlng: [25.28150, 82.99930],
+                            color: "#10b981",
+                            popup: "<b>8. Dispute / Encumbrance</b><br>Clean Title — No Active Dispute or Mortgage"
+                        }
+                    }
+                }
+            },
+
+            "5566-7788-9900": {
+                ulpin: "5566-7788-9900",
+                owner: "GreenTech Innovations Pvt Ltd",
+                locationName: "Sector 62, NOIDA Knowledge Park",
+                area: "28,500 sq ft (2,647.7 sq m)",
+                zone: "High-Tech Institutional / IT Park",
+                registrationStatus: "Registered",
+                cadastralSheet: "NOIDA-SEC62-BLOCK-B",
+                center: [28.62800, 77.36760],
+                boundary: [
+                    [28.62920, 77.36620],
+                    [28.62930, 77.36880],
+                    [28.62680, 77.36900],
+                    [28.62670, 77.36640]
+                ],
+                departments: {
+                    landRecords: {
+                        name: "1. Land Records / Revenue",
+                        status: "Industrial Leasehold",
+                        badgeClass: "badge-info",
+                        details: {
+                            "Lessee Name": "M/s GreenTech Innovations Pvt Ltd",
+                            "ULPIN": "5566-7788-9900",
+                            "Plot No": "B-12, Sector 62",
+                            "Lease Period": "90 Years (NOIDA Authority)",
+                            "Primary Use": "IT & Software Development"
+                        },
+                        marker: {
+                            latlng: [28.62800, 77.36760],
+                            popup: "<b>1. Land Records</b><br>M/s GreenTech Innovations Pvt Ltd<br>ULPIN: 5566-7788-9900"
+                        }
+                    },
+                    registration: {
+                        name: "2. Registration & Deeds",
+                        status: "Registered Lease",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Lease Deed Date": "19-Nov-2022",
+                            "Sub-Registrar Office": "SRO Noida Sector 33",
+                            "Stamp Duty": "Paid under UP IT Policy (₹12,50,000)",
+                            "Registration Certificate": "REG-NOIDA-2022-8114"
+                        }
+                    },
+                    surveyCadastral: {
+                        name: "3. Survey & Cadastral",
+                        status: "LiDAR Verified",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Cadastral Sheet": "NOIDA-SEC62-BLOCK-B",
+                            "Survey Mode": "Drone Photogrammetry & LiDAR",
+                            "Total Perimeter": "480.0 meters",
+                            "Boundary Monuments": "Corner Pillars Verified"
+                        },
+                        popup: "<b>3. Survey & Cadastral</b>: High Precision LiDAR Surveyed Perimeter"
+                    },
+                    townPlanning: {
+                        name: "4. Town Planning",
+                        status: "IT Institutional",
+                        badgeClass: "badge-info",
+                        details: {
+                            "Master Plan": "NOIDA Master Plan 2031",
+                            "Zoning": "High-Tech IT / Incubator Zone",
+                            "Permissible FAR": "3.5",
+                            "Green Area Mandatory": "15% Ground Area Minimum"
+                        }
+                    },
+                    buildingPermission: {
+                        name: "5. Building Permission",
+                        status: "B+G+8 Approved",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Approval Number": "NOIDA/PLG/2023/5541",
+                            "Approved Blueprint": "Basement + Ground + 8 Floors (B+G+8)",
+                            "AAI Airport Height NOC": "Cleared up to 45m AGL",
+                            "Fire & Safety System": "Integrated Dual Sprinklers Cleared"
+                        },
+                        marker: {
+                            latlng: [28.62850, 77.36800],
+                            color: "#3b82f6",
+                            popup: "<b>5. Building Permission</b>: B+G+8 Approved Institutional Tower"
+                        }
+                    },
+                    propertyTax: {
+                        name: "6. Property Tax",
+                        status: "Paid in Advance",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Assessment ID": "NOIDA-COM-IT-62-09",
+                            "Status": "Advance Paid through FY 2026-27",
+                            "Annual Lease Rent": "₹3,45,000",
+                            "Clearance Date": "01-Apr-2025"
+                        }
+                    },
+                    environment: {
+                        name: "7. Environment Restrictions",
+                        status: "ZLD Compliant",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Pollution Board Status": "UPPCB Consent to Operate (CTO) Active",
+                            "Water Treatment": "Zero Liquid Discharge (ZLD) STP on site",
+                            "Solar Rooftop Mandate": "Installed 120kW Grid-tied Array",
+                            "Green Belt Setback": "Maintained 6m Buffer on Boundary"
+                        },
+                        polyline: {
+                            coords: [
+                                [28.62940, 77.36600],
+                                [28.62950, 77.36900]
+                            ],
+                            color: "#10b981",
+                            popup: "<b>7. Environment Restrictions</b><br>Mandatory Green Belt Buffer & Stormwater Setback."
+                        }
+                    },
+                    dispute: {
+                        name: "8. Dispute / Encumbrance",
+                        status: "Bank Consortium Charge",
+                        badgeClass: "badge-warning",
+                        details: {
+                            "Charge Details": "Institutional Hypothecation (HDFC & ICICI)",
+                            "Facility Type": "Term Construction Loan (₹18.5 Cr)",
+                            "ROC Charge Filings": "Form CHG-1 Filed & Certified",
+                            "Title Litigation": "Zero Court Disputes"
+                        },
+                        marker: {
+                            latlng: [28.62720, 77.36700],
+                            color: "#f59e0b",
+                            popup: "<b>8. Dispute / Encumbrance</b><br>Institutional Consortium Hypothecation (HDFC/ICICI)"
+                        }
+                    }
+                }
+            },
+
+            "4321-8765-2109": {
+                ulpin: "4321-8765-2109",
+                owner: "Harish Chandra Patel & Others",
+                locationName: "Shivpur Peri-Urban / Varanasi Fringe",
+                area: "1.25 Acres (54,450 sq ft)",
+                zone: "Agricultural (Peri-Urban Transition)",
+                registrationStatus: "Registered",
+                cadastralSheet: "VNS-RUR-288",
+                center: [25.35200, 82.96400],
+                boundary: [
+                    [25.35320, 82.96250],
+                    [25.35350, 82.96580],
+                    [25.35100, 82.96620],
+                    [25.35050, 82.96280]
+                ],
+                departments: {
+                    landRecords: {
+                        name: "1. Land Records / Revenue",
+                        status: "Varashat Certified",
+                        badgeClass: "badge-info",
+                        details: {
+                            "Owner of Record": "Harish Chandra Patel & 2 Others",
+                            "ULPIN": "4321-8765-2109",
+                            "Khasra Number": "288/Min",
+                            "Khata Number": "77",
+                            "Mutation Type": "Inheritance (Varashat Recorded)"
+                        },
+                        marker: {
+                            latlng: [25.35200, 82.96400],
+                            popup: "<b>1. Land Records</b><br>Harish Chandra Patel & Others<br>ULPIN: 4321-8765-2109"
+                        }
+                    },
+                    registration: {
+                        name: "2. Registration & Deeds",
+                        status: "Succession Deed",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Registration Type": "Registered Family Succession",
+                            "Date": "15-Jan-2018",
+                            "Sub-Registrar": "SRO Sadar Varanasi",
+                            "Document No": "Book 1, Vol 890, pp 23-30"
+                        }
+                    },
+                    surveyCadastral: {
+                        name: "3. Survey & Cadastral",
+                        status: "Revenue Village Map",
+                        badgeClass: "badge-info",
+                        details: {
+                            "Cadastral Sheet": "VNS-RUR-288",
+                            "Boundary Lat/Long": "Mapped from Revenue Village Triangulation",
+                            "Monuments": "4 Stone Boundary Seemana Pillars",
+                            "Field Area": "1.250 Standard Hectare Unit"
+                        },
+                        popup: "<b>3. Survey & Cadastral</b>: Revenue Village Boundary Seemana Pillars #14-18"
+                    },
+                    townPlanning: {
+                        name: "4. Town Planning",
+                        status: "Agricultural Fringe",
+                        badgeClass: "badge-info",
+                        details: {
+                            "Master Plan": "Peri-Urban Master Plan Horizon",
+                            "Land Use": "Agricultural / Agro-processing",
+                            "Non-Agri Conversion (143/80)": "Pending State Revenue Clearance",
+                            "FAR Allowed": "0.5 (Agri-Storage only)"
+                        }
+                    },
+                    buildingPermission: {
+                        name: "5. Building Permission",
+                        status: "Farm Storage Only",
+                        badgeClass: "badge-warning",
+                        details: {
+                            "Approved Structure": "Agri-Warehouse & Tube-well Shed",
+                            "Commercial Building": "Prohibited without Land Conversion",
+                            "Electricity Clearance": "Agri-Feeder Connection Active"
+                        },
+                        marker: {
+                            latlng: [25.35240, 82.96480],
+                            color: "#f59e0b",
+                            popup: "<b>5. Building Permission</b>: Permitted only for Agri Storage / Farm Shed"
+                        }
+                    },
+                    propertyTax: {
+                        name: "6. Property Tax",
+                        status: "Zila Panchayat Paid",
+                        badgeClass: "badge-success",
+                        details: {
+                            "Assessment Type": "Zila Panchayat Rural Assessment",
+                            "Receipt ID": "ZP-VNS-2025-441",
+                            "Status": "Paid for 2025",
+                            "Arrears": "None"
+                        }
+                    },
+                    environment: {
+                        name: "7. Environment Restrictions",
+                        status: "Irrigation Canal Buffer",
+                        badgeClass: "badge-warning",
+                        details: {
+                            "Canal Setback": "10-meter buffer along western irrigation canal",
+                            "Water Extraction": "Groundwater Authority (CGWA) NOC active for borewell",
+                            "Pesticide Runoff": "Advisory in effect"
+                        },
+                        polyline: {
+                            coords: [
+                                [25.35370, 82.96200],
+                                [25.35390, 82.96650]
+                            ],
+                            color: "#10b981",
+                            popup: "<b>7. Environment Restrictions</b><br>10-meter irrigation canal setback buffer."
+                        }
+                    },
+                    dispute: {
+                        name: "8. Dispute / Encumbrance",
+                        status: "Court Partition Suit",
+                        badgeClass: "badge-danger",
+                        details: {
+                            "Litigation Status": "Active Civil Partition Suit (OS #112/2022)",
+                            "Court": "Civil Judge (Senior Division), Varanasi",
+                            "Injunction": "Interim status-quo on third-party transfer",
+                            "Bank Loans": "Nil"
+                        },
+                        marker: {
+                            latlng: [25.35120, 82.96320],
+                            color: "#ef4444",
+                            popup: "<b>8. Dispute / Encumbrance</b><br>⚠️ Civil Partition Suit (OS #112/2022) Pending"
+                        }
+                    }
+                }
+            }
+        };
+
+        // ==========================================
+        // 2. APPLICATION STATE
+        // ==========================================
+        let map = null;
+        let esriImageryLayer = null;
+        let esriLabelsLayer = null;
+        let isLabelsVisible = false;
+
+        // Layer group to hold the currently displayed parcel and overlays
+        let currentParcelLayerGroup = null;
+        let currentSelectedParcel = null;
+
+        const DEFAULT_CENTER = [28.6139, 77.2090];
+        const DEFAULT_ZOOM = 13;
+
+        // ==========================================
+        // 3. INITIALIZE MAP (Real Esri World Imagery)
+        // ==========================================
+        function initializeMap() {
+            map = L.map('map', {
+                center: DEFAULT_CENTER,
+                zoom: DEFAULT_ZOOM,
+                zoomControl: false
+            });
+
+            // Re-position zoom control to bottom right so it doesn't overlap header
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+            // 14. Real Esri World Imagery Tile Layer
+            esriImageryLayer = L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                {
+                    attribution: 'Tiles &copy; Esri, Maxar, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
+                    maxZoom: 19
+                }
+            ).addTo(map);
+
+            // Optional Esri Transportation/Places labels overlay
+            esriLabelsLayer = L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+                {
+                    maxZoom: 19
+                }
+            );
+
+            // Initialize container for dynamic parcel overlays
+            currentParcelLayerGroup = L.layerGroup().addTo(map);
+
+            // Ensure map fits when window resizes
+            window.addEventListener('resize', () => map.invalidateSize());
+        }
+
+        // ==========================================
+        // 4. VALIDATION & API RETRIEVAL
+        // Clean separation: UI -> Search -> getParcelByULPIN -> GIS Rendering
+        // ==========================================
+
+        /**
+         * Validates the format and content of an entered ULPIN
+         */
+        function validateULPIN(ulpin) {
+            if (!ulpin || typeof ulpin !== 'string') {
+                return { valid: false, message: 'Please enter a ULPIN.' };
+            }
+            const clean = ulpin.trim();
+            if (clean.length < 5) {
+                return { valid: false, message: 'ULPIN is too short. Please enter a valid identifier.' };
+            }
+            return { valid: true, ulpin: clean };
+        }
+
+        /**
+         * Asynchronous fetch function.
+         * Currently queries local mock dataset; designed to be swapped with:
+         *   const response = await fetch(`/api/v1/parcels/${encodeURIComponent(ulpin)}`);
+         */
+        async function getParcelByULPIN(ulpin) {
+            // Simulate realistic network latency for GIS query
+            await new Promise(resolve => setTimeout(resolve, 350));
+
+            // Standardize format (case-insensitive & whitespace trimmed)
+            const queryKey = ulpin.trim();
+            
+            // Check direct match
+            if (parcels[queryKey]) {
+                return parcels[queryKey];
+            }
+
+            // Also check match without dashes for user convenience
+            const rawQuery = queryKey.replace(/[^a-zA-Z0-9]/g, '');
+            for (const key in parcels) {
+                const rawKey = key.replace(/[^a-zA-Z0-9]/g, '');
+                if (rawKey === rawQuery) {
+                    return parcels[key];
+                }
+            }
+
+            return null; // Not found
+        }
+
+        // ==========================================
+        // 5. SEARCH & EVENT HANDLERS
+        // ==========================================
+
+        async function handleSearch(event) {
+            if (event) event.preventDefault();
+            const inputElem = document.getElementById('ulpinInput');
+            const rawUlpin = inputElem.value;
+
+            hideFeedback();
+
+            // 1. Validate input
+            const validation = validateULPIN(rawUlpin);
+            if (!validation.valid) {
+                showError(validation.message);
+                clearSelectedParcel(false); // Clear previous map polygon on invalid search
+                return;
+            }
+
+            const searchUlpin = validation.ulpin;
+
+            // 12. Set loading state
+            setLoading(true, "Finding parcel in GIS cadastral database...");
+
+            try {
+                // 4. Query parcel data
+                const parcel = await getParcelByULPIN(searchUlpin);
+
+                if (!parcel) {
+                    // 11. Invalid ULPIN handling
+                    clearSelectedParcel(false);
+                    showError("ULPIN not found. Please verify the ULPIN and try again.");
+                    setLoading(false);
+                    return;
+                }
+
+                // 13. Clear previous selection and display new parcel
+                clearSelectedParcel(false);
+                displayParcel(parcel);
+                displayParcelInformation(parcel);
+                displayDepartmentInformation(parcel);
+
+                setLoading(false);
+            } catch (err) {
+                console.error("GIS lookup failed:", err);
+                clearSelectedParcel(false);
+                showError("An error occurred while retrieving parcel data. Please try again.");
+                setLoading(false);
+            }
+        }
+
+        function quickSelectULPIN(ulpin) {
+            const input = document.getElementById('ulpinInput');
+            input.value = ulpin;
+            handleSearch();
+        }
+
+        // ==========================================
+        // 6. GIS RENDERING (LEAFLET DYNAMICS)
+        // ==========================================
+
+        /**
+         * Clears all active parcel polygons, labels, and department markers
+         */
+        function clearSelectedParcel(resetInput = true) {
+            currentSelectedParcel = null;
+
+            // Remove all layers from the parcel layer group
+            if (currentParcelLayerGroup) {
+                currentParcelLayerGroup.clearLayers();
+            }
+
+            // Reset UI sidebar to empty state
+            document.getElementById('emptyStateView').style.display = 'block';
+            document.getElementById('parcelLoadedView').style.display = 'none';
+            document.getElementById('dossierStatusBadge').textContent = 'No Parcel Selected';
+            document.getElementById('dossierStatusBadge').style.background = 'rgba(245, 158, 11, 0.2)';
+            document.getElementById('dossierStatusBadge').style.color = '#fbbf24';
+            document.getElementById('fitParcelBtn').style.display = 'none';
+
+            if (resetInput) {
+                document.getElementById('ulpinInput').value = '';
+                hideFeedback();
+            }
+        }
+
+        /**
+         * Renders the searched parcel polygon, visible permanent label,
+         * and the 8 department markers on the satellite map.
+         */
+        function displayParcel(parcel) {
+            currentSelectedParcel = parcel;
+
+            // 6. Draw parcel polygon
+            const parcelPolygon = L.polygon(parcel.boundary, {
+                color: '#f59e0b',           // Vibrant amber outline
+                weight: 4,                  // Strong boundary
+                fillColor: '#ea580c',       // High-visibility orange fill
+                fillOpacity: 0.35,          // Semi-transparent
+                dashArray: null,
+                lineJoin: 'round'
+            });
+
+            // Bind interactive popup to polygon
+            parcelPolygon.bindPopup(`
+                <div class="popup-header">ULPIN: ${parcel.ulpin}</div>
+                <div class="popup-body">
+                    <strong>Owner:</strong> ${parcel.owner}<br>
+                    <strong>Zone:</strong> ${parcel.zone}<br>
+                    <strong>Area:</strong> ${parcel.area}
+                </div>
+            `);
+
+            // Add polygon to layer group
+            currentParcelLayerGroup.addLayer(parcelPolygon);
+
+            // 7. Permanent / Visible Parcel Label (Leaflet tooltip)
+            // Displays: "THIS COVERED AREA BELONGS TO THIS ULPIN" + ULPIN + Owner
+            const centerLatLng = L.latLng(parcel.center[0], parcel.center[1]);
+            
+            const labelContent = `
+                <div class="label-badge-title">★ THIS COVERED AREA BELONGS TO THIS ULPIN ★</div>
+                <div class="label-badge-ulpin">${parcel.ulpin}</div>
+                <div class="label-badge-owner">Owner: ${parcel.owner}</div>
+            `;
+
+            parcelPolygon.bindTooltip(labelContent, {
+                permanent: true,
+                direction: 'center',
+                className: 'parcel-permanent-label',
+                interactive: true
+            }).openTooltip();
+
+            // 9. Department Map Overlays for THIS specific parcel
+            renderDepartmentMapLayers(parcel);
+
+            // 6. Fit map bounds inside viewport
+            map.fitBounds(parcelPolygon.getBounds(), {
+                padding: [60, 60],
+                maxZoom: 19,
+                animate: true,
+                duration: 1.2
+            });
+
+            document.getElementById('fitParcelBtn').style.display = 'flex';
+        }
+
+        /**
+         * Renders the department-specific markers and line buffers for the selected parcel
+         */
+        function renderDepartmentMapLayers(parcel) {
+            const depts = parcel.departments;
+            if (!depts) return;
+
+            // 1. Revenue / Land Records Marker
+            if (depts.landRecords && depts.landRecords.marker) {
+                const revMarker = L.circleMarker(depts.landRecords.marker.latlng, {
+                    color: '#ffffff',
+                    weight: 2,
+                    fillColor: '#3b82f6',
+                    fillOpacity: 0.9,
+                    radius: 7
+                });
+                revMarker.bindPopup(`
+                    <div class="popup-header">1. Land Records / Revenue</div>
+                    <div class="popup-body">${depts.landRecords.marker.popup}</div>
+                `);
+                currentParcelLayerGroup.addLayer(revMarker);
+            }
+
+            // 5. Building Permission Marker
+            if (depts.buildingPermission && depts.buildingPermission.marker) {
+                const bldg = depts.buildingPermission.marker;
+                const bldgMarker = L.circleMarker(bldg.latlng, {
+                    color: '#ffffff',
+                    weight: 2,
+                    fillColor: bldg.color || '#3b82f6',
+                    fillOpacity: 0.9,
+                    radius: 8
+                });
+                bldgMarker.bindPopup(`
+                    <div class="popup-header">5. Building Permission</div>
+                    <div class="popup-body">${bldg.popup}</div>
+                `);
+                currentParcelLayerGroup.addLayer(bldgMarker);
+            }
+
+            // 7. Environment Buffer Polyline
+            if (depts.environment && depts.environment.polyline) {
+                const env = depts.environment.polyline;
+                const envLine = L.polyline(env.coords, {
+                    color: env.color || '#10b981',
+                    weight: 4,
+                    dashArray: '6, 8',
+                    opacity: 0.95
+                });
+                envLine.bindPopup(`
+                    <div class="popup-header">7. Environment Buffer</div>
+                    <div class="popup-body">${env.popup}</div>
+                `);
+                currentParcelLayerGroup.addLayer(envLine);
+            }
+
+            // 8. Dispute / Encumbrance Marker
+            if (depts.dispute && depts.dispute.marker) {
+                const disp = depts.dispute.marker;
+                const dispMarker = L.circleMarker(disp.latlng, {
+                    color: '#ffffff',
+                    weight: 2,
+                    fillColor: disp.color || '#ef4444',
+                    fillOpacity: 0.95,
+                    radius: 9
+                });
+                dispMarker.bindPopup(`
+                    <div class="popup-header">8. Dispute / Encumbrance</div>
+                    <div class="popup-body">${disp.popup}</div>
+                `);
+                currentParcelLayerGroup.addLayer(dispMarker);
+            }
+        }
+
+        // ==========================================
+        // 7. SIDEBAR INFORMATION PRESENTATION
+        // ==========================================
+
+        /**
+         * Displays the primary parcel metrics & ULPIN covered banner
+         */
+        function displayParcelInformation(parcel) {
+            document.getElementById('emptyStateView').style.display = 'none';
+            document.getElementById('parcelLoadedView').style.display = 'block';
+
+            // Visual Central Requirement
+            document.getElementById('bannerUlpin').textContent = `ULPIN: ${parcel.ulpin}`;
+            document.getElementById('bannerOwner').textContent = `Owner: ${parcel.owner}`;
+
+            // Metrics
+            document.getElementById('metricArea').textContent = parcel.area || '—';
+            document.getElementById('metricZone').textContent = parcel.zone || '—';
+            document.getElementById('metricRegistration').textContent = parcel.registrationStatus || 'Registered';
+            document.getElementById('metricCadastral').textContent = parcel.cadastralSheet || '—';
+            document.getElementById('metricCoordinates').textContent = `${parcel.center[0].toFixed(5)}° N, ${parcel.center[1].toFixed(5)}° E`;
+
+            // Status badge
+            const badge = document.getElementById('dossierStatusBadge');
+            badge.textContent = `ULPIN Verified`;
+            badge.style.background = 'rgba(16, 185, 129, 0.2)';
+            badge.style.color = '#34d399';
+        }
+
+        /**
+         * Renders the 8 department cards with their synchronized data
+         */
+        function displayDepartmentInformation(parcel) {
+            const container = document.getElementById('departmentsContainer');
+            container.innerHTML = '';
+
+            const depts = parcel.departments;
+            if (!depts) return;
+
+            let deptIndex = 1;
+            for (const key in depts) {
+                const dept = depts[key];
+                const card = document.createElement('div');
+                card.className = 'dept-card';
+
+                let detailsHtml = '';
+                for (const propName in dept.details) {
+                    detailsHtml += `
+                        <div class="dept-item-row">
+                            <span class="dept-prop-name">${propName}</span>
+                            <span class="dept-prop-val">${dept.details[propName]}</span>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="dept-header" onclick="toggleDeptAccordion(this)">
+                        <div class="dept-title-left">
+                            <span class="dept-num">${deptIndex}</span>
+                            <span>${dept.name}</span>
+                        </div>
+                        <span class="dept-badge ${dept.badgeClass || 'badge-info'}">${dept.status}</span>
+                    </div>
+                    <div class="dept-body">
+                        ${detailsHtml}
+                    </div>
+                `;
+
+                container.appendChild(card);
+                deptIndex++;
+            }
+        }
+
+        function toggleDeptAccordion(headerElem) {
+            const body = headerElem.nextElementSibling;
+            if (body) {
+                body.style.display = body.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // ==========================================
+        // 8. UI HELPERS & NOTIFICATIONS
+        // ==========================================
+
+        function showError(message) {
+            const feedback = document.getElementById('searchFeedback');
+            feedback.className = 'search-feedback error';
+            feedback.innerHTML = `⚠️ ${message}`;
+        }
+
+        function setLoading(isLoading, message = '') {
+            const feedback = document.getElementById('searchFeedback');
+            const searchBtn = document.getElementById('viewParcelBtn');
+
+            if (isLoading) {
+                searchBtn.disabled = true;
+                searchBtn.innerHTML = `<span>Finding parcel...</span>`;
+                feedback.className = 'search-feedback loading';
+                feedback.innerHTML = `⏳ ${message}`;
+            } else {
+                searchBtn.disabled = false;
+                searchBtn.innerHTML = `<span>View Parcel</span>`;
+            }
+        }
+
+        function hideFeedback() {
+            const feedback = document.getElementById('searchFeedback');
+            feedback.className = 'search-feedback';
+            feedback.innerHTML = '';
+        }
+
+        function fitCurrentParcel() {
+            if (currentSelectedParcel && currentParcelLayerGroup) {
+                const bounds = L.polygon(currentSelectedParcel.boundary).getBounds();
+                map.fitBounds(bounds, { padding: [60, 60], maxZoom: 19, animate: true });
+            }
+        }
+
+        function resetDefaultView() {
+            map.setView(DEFAULT_CENTER, DEFAULT_ZOOM, { animate: true });
+        }
+
+        function toggleLabelsLayer() {
+            const btn = document.getElementById('labelsToggleBtn');
+            if (isLabelsVisible) {
+                map.removeLayer(esriLabelsLayer);
+                isLabelsVisible = false;
+                btn.style.borderColor = 'var(--border-glass)';
+                btn.style.color = '#fff';
+            } else {
+                map.addLayer(esriLabelsLayer);
+                isLabelsVisible = true;
+                btn.style.borderColor = '#38bdf8';
+                btn.style.color = '#38bdf8';
+            }
+        }
+
+        // Initialize map when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMap();
+        });
+    </script>
+</body>
+</html>

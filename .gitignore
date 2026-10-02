@@ -1,0 +1,138 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python tooling/cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+
+# =========================
+# Node.js / Frontend
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Frontend build output
+dist/
+build/
+.vite/
+
+
+# =========================
+# BhuStack Runtime
+# =========================
+.run/
+logs/
+*.pid
+*.pid.lock
+
+
+# =========================
+# Database / Local Data
+# =========================
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.bak
+
+# PostgreSQL local dumps
+*.sql.gz
+
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+.DS_Store?
+Thumbs.db
+Desktop.ini
+
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.idea/
+*.swp
+*.swo
+
+
+# =========================
+# Temporary Files
+# =========================
+*.tmp
+*.temp
+*.log
+
+
+# =========================
+# Python generated files
+# =========================
+*.egg-info/
+.eggs/
+wheels/
+pip-wheel-metadata/
+
+
+# =========================
+# Test / Coverage
+# =========================
+.coverage.*
+.pytest_cache/
+htmlcov/
+
+
+# =========================
+# Frontend generated files
+# =========================
+frontend/dist/
+frontend/node_modules/
+
+
+# =========================
+# Backend generated files
+# =========================
+backend/.venv/
+backend/__pycache__/
+backend/**/*.pyc
+
+
+# =========================
+# Scripts generated files
+# =========================
+scripts/__pycache__/
+
+
+# =========================
+# Local Docker/runtime files
+# =========================
+docker-data/
+postgres-data/

@@ -1,0 +1,27 @@
+# Optional local PostGIS for the hackathon demo.
+# Host PostgreSQL on :5432 can be used instead if you already have PostGIS.
+
+services:
+  postgis:
+    container_name: bhustack-postgis
+    image: postgis/postgis:16-3.4
+
+    environment:
+      POSTGRES_DB: bhustack
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+
+    ports:
+      - "5433:5432"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bhustack"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    volumes:
+      - bhustack_postgis_data:/var/lib/postgresql/data
+
+volumes:
+  bhustack_postgis_data:
