@@ -260,14 +260,14 @@ database/schema.sql
 ```
 
 Demo data is maintained in:
----
+```
 database/seed.sql
----
+```
 
 Additional sample GIS/administrative data is available under:
----
+```
 database/sample_data/
----
+```
 
 Current sample data includes:
 
@@ -280,13 +280,13 @@ The database is intended for demonstration and development purposes.
 ## Demo Data
 
 The project contains synthetic parcel records using ULPIN-style identifiers such as:
----
+```
 IND-DEMO-000001
 IND-DEMO-000002
 IND-DEMO-000003
 ...
 IND-DEMO-000030
----
+```
 
 Additional administrative/demo records are also present in the current database.
 
@@ -299,10 +299,10 @@ Environment-specific configuration should be stored in .env files.
 Do not commit actual .env files to GitHub.
 
 Example configuration files are provided as:
----
+```
 backend/.env.example
 frontend/.env.example
----
+```
 
 Create the appropriate .env file locally based on these examples.
 
@@ -322,38 +322,38 @@ PostgreSQL/PostGIS is provided through Docker.
 ### Linux
 
 From the project root:
----
+```
 ./start.sh
----
+```
 
 The startup system is designed to handle the required local services and project startup.
 
 To stop the project:
----
+```
 ./stop.sh
----
+```
 
 ### Windows
 
 Use:
----
+```
 start.bat
----
+```
 
 To stop:
----
+```
 stop.bat
----
+```
 
 PowerShell scripts are also available:
----
+```
 .\start.ps1
----
+```
 
 and:
----
+```
 .\stop.ps1
----
+```
 
 If PowerShell execution policy prevents running the script, the batch file can be used instead.
 
@@ -362,53 +362,53 @@ If PowerShell execution policy prevents running the script, the batch file can b
 
 Create a virtual environment:
 
----
+```
 cd backend
 python -m venv .venv
----
+```
 
 Activate it on Linux:
----
+```
 source .venv/bin/activate
----
+```
 
 Windows:
----
+```
 .venv\Scripts\Activate.ps1
----
+```
 
 Install dependencies:
----
+```
 pip install -r requirements.txt
----
+```
 
 ### Frontend
 
 From the frontend directory:
----
+```
 cd frontend
 npm install
----
+```
 
 Run the development server:
----
+```
 npm run dev
----
+```
 
 ### Database
 
 Start PostGIS using Docker Compose:
----
+```
 docker compose up -d postgis
----
+```
 
 The project uses PostgreSQL/PostGIS for the spatial database.
 
 Database schema and demo data are provided in:
----
+```
 database/schema.sql
 database/seed.sql
----
+```
 
 ### API
 
@@ -425,19 +425,19 @@ The backend provides APIs for:
  - Administrative information
 
 The exact API implementation is available under:
----
+```
 backend/app/api/
 backend/app/services/
----
+```
 
 When the backend is running, FastAPI's interactive documentation can be accessed through its standard /docs endpoint.
 
 ### Postman
 
 A Postman collection is included for API testing:
----
+```
 postman/BhuStack.postman_collection.json
----
+```
 
 Import this collection into Postman after starting the backend.
 
@@ -446,79 +446,79 @@ Import this collection into Postman after starting the backend.
 The project uses GeoJSON and PostGIS for spatial information.
 
 Current sample GIS data includes:
----
+```
 database/sample_data/campus_parcels.geojson
 database/sample_data/indian_states.geojson
 database/sample_data/bihar_admin.json
----
+```
 
 Administrative data can be processed through:
----
+```
 scripts/ingest_administrative_data.py
----
+```
 
 ## Cross-Platform Support
 
 The project contains startup and shutdown scripts for Linux and Windows.
 
  - Linux
----
+```
 start.sh
 stop.sh
----
+```
 
  - Windows Batch
----
+```
 start.bat
 stop.bat
----
+```
 
  - Windows PowerShell
----
+```
 start.ps1
 stop.ps1
----
+```
 
 The Python-based project CLI is located at:
----
+```
 scripts/bhustack.py
----
+```
 
 Supporting commands are provided through:
----
+```
 scripts/init.py
 scripts/start.py
 scripts/stop.py
----
+```
 
 ## Docker
 
 The PostgreSQL/PostGIS service is defined in:
----
+```
 docker-compose.yml
----
+```
 
 Start the database:
----
+```
 docker compose up -d postgis
----
+```
 
 Check running containers:
----
+```
 docker ps
----
+```
 
 Stop the database:
----
+```
 docker compose stop postgis
----
+```
 
 The Docker database volume is local to the machine and is not stored in GitHub.
 
 ## Important Repository Rules
 
 The following local/generated files must not be committed:
----
+```
 .env
 .venv/
 node_modules/
@@ -526,12 +526,12 @@ dist/
 logs/
 .run/
 __pycache__/
----
+```
 
 These are already covered by .gitignore.
 
 The following project sources should remain version controlled:
----
+```
 database/schema.sql
 database/seed.sql
 database/sample_data/
@@ -541,11 +541,11 @@ frontend/package.json
 frontend/package-lock.json
 scripts/
 docker-compose.yml
----
+```
 
 ## Project Status
 Current implementation includes:
----
+```
 React/Vite frontend
 FastAPI backend
 PostgreSQL/PostGIS database
@@ -560,7 +560,7 @@ Administrative dashboard
 Interoperability demonstration
 Docker-based database
 Cross-platform startup scripts
----
+```
 
 The project is intended as a prototype/demo implementation of an integrated digital land-governance platform.
 
