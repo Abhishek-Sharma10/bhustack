@@ -177,77 +177,77 @@ The backend API acts as the integration layer between the frontend GIS applicati
 ## Project Structure
 
 ```
-bhustack/
-│
-├── backend/
-│   ├── app/
-│   │   ├── adapters/
-│   │   ├── api/
-│   │   ├── auth/
-│   │   ├── database/
-│   │   ├── models/
-│   │   ├── schemas/
-│   │   ├── services/
-│   │   └── utils/
-│   │
-│   ├── tests/
-│   ├── .env.example
-│   └── requirements.txt
-│
-├── database/
-│   ├── sample_data/
-│   │   ├── bihar_admin.json
-│   │   ├── campus_parcels.geojson
-│   │   └── indian_states.geojson
-│   │
-│   ├── generate_seed.py
-│   ├── queries.sql
-│   ├── schema.sql
-│   └── seed.sql
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── map/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── types/
-│   │   └── utils/
-│   │
-│   ├── .env.example
-│   ├── index.html
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── postcss.config.js
-│   ├── tailwind.config.js
-│   └── vite.config.js
-│
-├── postman/
-│   └── BhuStack.postman_collection.json
-│
-├── scripts/
-│   ├── bhustack.py
-│   ├── ingest_administrative_data.py
-│   ├── init.py
-│   ├── start.py
-│   └── stop.py
-│
-├── docker-compose.yml
-├── index.html
-├── satellite_parcel_view.html
-│
-├── start.sh
-├── start.ps1
-├── start.bat
-│
-├── stop.sh
-├── stop.ps1
-├── stop.bat
-│
-├── .gitignore
-└── README.md
+       bhustack/
+       │
+       ├── backend/
+       │   ├── app/
+       │   │   ├── adapters/
+       │   │   ├── api/
+       │   │   ├── auth/
+       │   │   ├── database/
+       │   │   ├── models/
+       │   │   ├── schemas/
+       │   │   ├── services/
+       │   │   └── utils/
+       │   │
+       │   ├── tests/
+       │   ├── .env.example
+       │   └── requirements.txt
+       │
+       ├── database/
+       │   ├── sample_data/
+       │   │   ├── bihar_admin.json
+       │   │   ├── campus_parcels.geojson
+       │   │   └── indian_states.geojson
+       │   │
+       │   ├── generate_seed.py
+       │   ├── queries.sql
+       │   ├── schema.sql
+       │   └── seed.sql
+       │
+       ├── frontend/
+       │   ├── public/
+       │   ├── src/
+       │   │   ├── components/
+       │   │   ├── hooks/
+       │   │   ├── map/
+       │   │   ├── pages/
+       │   │   ├── services/
+       │   │   ├── types/
+       │   │   └── utils/
+       │   │
+       │   ├── .env.example
+       │   ├── index.html
+       │   ├── package.json
+       │   ├── package-lock.json
+       │   ├── postcss.config.js
+       │   ├── tailwind.config.js
+       │   └── vite.config.js
+       │
+       ├── postman/
+       │   └── BhuStack.postman_collection.json
+       │
+       ├── scripts/
+       │   ├── bhustack.py
+       │   ├── ingest_administrative_data.py
+       │   ├── init.py
+       │   ├── start.py
+       │   └── stop.py
+       │
+       ├── docker-compose.yml
+       ├── index.html
+       ├── satellite_parcel_view.html
+       │
+       ├── start.sh
+       ├── start.ps1
+       ├── start.bat
+       │
+       ├── stop.sh
+       ├── stop.ps1
+       ├── stop.bat
+       │
+       ├── .gitignore
+       └── README.md
 ```
 
 ## Database
