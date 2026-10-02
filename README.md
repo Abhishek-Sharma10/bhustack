@@ -254,9 +254,10 @@ bhustack/
 BhuStack uses PostgreSQL with the PostGIS extension for spatial data.
 
 The main database definition is maintained in:
----
+
+```
 database/schema.sql
----
+```
 
 Demo data is maintained in:
 ---
