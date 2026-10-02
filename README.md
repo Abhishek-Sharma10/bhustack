@@ -176,7 +176,7 @@ The backend API acts as the integration layer between the frontend GIS applicati
 ```
 ## Project Structure
 
----
+```
 bhustack/
 │
 ├── backend/
@@ -248,8 +248,7 @@ bhustack/
 │
 ├── .gitignore
 └── README.md
-
----
+```
 
 ## Database
 BhuStack uses PostgreSQL with the PostGIS extension for spatial data.
